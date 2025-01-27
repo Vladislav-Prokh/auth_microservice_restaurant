@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-employees-table
+      author: Prokhovich Vladislav
+      changes:
+        - createTable:
+            tableName: employees
+            columns:
+              - column:
+                  name: employee_id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: employee_name
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: employee_surname
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: employee_email
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: employee_role
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
