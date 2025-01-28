@@ -18,7 +18,7 @@ public class Employee {
 
     @Column(length = 20,name = "employee_name")
     private String employeeName;
-    @Column(nullable = true)
+    @Column
     private String password;
     @Column(name = "employee_surname", nullable = false)
     private String employeeSurName;

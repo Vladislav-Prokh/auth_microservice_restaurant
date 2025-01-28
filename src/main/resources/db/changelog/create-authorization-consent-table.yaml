@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Prokhovich Vladislav
+      changes:
+        - createTable:
+            tableName: authorizationconsent
+            columns:
+              - column:
+                  name: registeredclientid
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: principalname
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: authorities
+                  type: varchar(1000)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            columnNames: registeredclientid, principalname
+            constraintName: authorizationconsent_pkey
+            tableName: authorizationconsent

@@ -1,7 +1,6 @@
 package auth.server;
-
 import auth.server.repositories.EmployeeRepository;
-import auth.server.services.FederatedIdentityAuthenticationSuccessHandler;
+import auth.server.handlers.FederatedIdentityAuthenticationSuccessHandler;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
@@ -9,7 +8,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -40,7 +38,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import auth.server.entities.Employee;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -140,15 +137,12 @@ public class SecurityConfig {
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
     }
+
 
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer() {
@@ -163,5 +157,9 @@ public class SecurityConfig {
                 });
             }
         };
+    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

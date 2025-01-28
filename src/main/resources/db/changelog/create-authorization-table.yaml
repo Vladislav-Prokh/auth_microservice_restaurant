@@ -1,0 +1,179 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Prokhovich Vladislav
+      changes:
+        - createTable:
+            tableName: authorization
+            columns:
+              - column:
+                  name: id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: registeredclientid
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: principalname
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: authorizationgranttype
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: authorizedscopes
+                  type: varchar(1000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: attributes
+                  type: varchar(10000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: state
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: authorizationcodevalue
+                  type: varchar(10000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: authorizationcodeissuedat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: authorizationcodeexpiresat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: authorizationcodemetadata
+                  type: varchar(2000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: accesstokenvalue
+                  type: varchar(10000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: accesstokenissuedat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: accesstokenexpiresat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: accesstokenmetadata
+                  type: varchar(2000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: accesstokentype
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: accesstokenscopes
+                  type: varchar(1000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: refreshtokenvalue
+                  type: varchar(10000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: refreshtokenissuedat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: refreshtokenexpiresat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: refreshtokenmetadata
+                  type: varchar(2000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: oidcidtokenvalue
+                  type: varchar(10000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: oidcidtokenissuedat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: oidcidtokenexpiresat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: oidcidtokenmetadata
+                  type: varchar(2000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: oidcidtokenclaims
+                  type: varchar(2000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: usercodevalue
+                  type: varchar(6000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: usercodeissuedat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: usercodeexpiresat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: usercodemetadata
+                  type: varchar(2000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: devicecodevalue
+                  type: varchar(10000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: devicecodeissuedat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: devicecodeexpiresat
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: devicecodemetadata
+                  type: varchar(10000)
+                  constraints:
+                    nullable: true
