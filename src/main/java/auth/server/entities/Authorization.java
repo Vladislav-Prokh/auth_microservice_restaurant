@@ -13,16 +13,16 @@ import java.time.Instant;
 public class Authorization {
 
     @Id
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false)
     private String id;
 
-    @Column(name = "registeredclientid", length = 255, nullable = false)
+    @Column(name = "registeredclientid", nullable = false)
     private String registeredClientId;
 
-    @Column(name = "principalname", length = 255, nullable = false)
+    @Column(name = "principalname", nullable = false)
     private String principalName;
 
-    @Column(name = "authorizationgranttype", length = 255, nullable = false)
+    @Column(name = "authorizationgranttype", nullable = false)
     private String authorizationGrantType;
 
     @Column(name = "authorizedscopes", length = 1000)
@@ -58,7 +58,7 @@ public class Authorization {
     @Column(name = "accesstokenmetadata", length = 2000)
     private String accessTokenMetadata;
 
-    @Column(name = "accesstokentype", length = 255)
+    @Column(name = "accesstokentype")
     private String accessTokenType;
 
     @Column(name = "accesstokenscopes", length = 1000)

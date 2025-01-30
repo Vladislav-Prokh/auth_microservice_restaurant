@@ -12,25 +12,26 @@ spring:
         client:
           oidc-client:
             registration:
-              client-id: "{replace_it}"
-              client-secret: "{replace_it}"
+              client-id: "{replace}"
+              client-secret: "{{replace}}"
               client-authentication-methods:
-                - "client_secret_basic"
+                - "none"
               authorization-grant-types:
                 - "authorization_code"
                 - "refresh_token"
               redirect-uris:
-                - "http://localhost:9000/login/oidc-client"
+                - "http://localhost:4200/menu/beverages"
               post-logout-redirect-uris:
-                - "http://localhost:9000/"
+                - "http://localhost:4200/menu/beverages"
               scopes: openid,email,profile
             require-authorization-consent: true
+            require-proof-key: true
 
       client:
         registration:
           google:
-            client-id: "{replace_it}"
-            client-secret: "{replace_it}"
+            client-id: "{{replace}}"
+            client-secret: "{{replace}}"
             scope: openid,email,profile
             redirect-uri: "http://localhost:9000/login/oauth2/code/google"
             authorization-grant-type: authorization_code
@@ -56,5 +57,3 @@ spring:
       hibernate:
         hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-
-

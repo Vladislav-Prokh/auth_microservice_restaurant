@@ -1,6 +1,8 @@
 package auth.server.exceptions;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -54,18 +56,11 @@ public class GlobalExceptionHandler {
 
     @Setter
     @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ErrorResponse {
         private int status;
         private String message;
         private long timestamp;
-
-        public ErrorResponse() {
-        }
-        public ErrorResponse(int status, String message, long timestamp) {
-            this.status = status;
-            this.message = message;
-            this.timestamp = timestamp;
-        }
-
     }
 }

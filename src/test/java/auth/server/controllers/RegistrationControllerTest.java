@@ -1,7 +1,7 @@
 package auth.server.controllers;
 
-import auth.server.DTO.RegistrationRequest;
-import auth.server.DTO.RegistrationResponse;
+import auth.server.dto.RegistrationRequest;
+import auth.server.dto.RegistrationResponse;
 import auth.server.entities.Role;
 import auth.server.services.RegistrationService;
 import com.fasterxml.jackson.databind.ObjectMapper;

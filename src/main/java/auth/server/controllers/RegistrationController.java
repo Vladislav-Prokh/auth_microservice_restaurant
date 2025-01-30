@@ -1,7 +1,7 @@
 package auth.server.controllers;
 
-import auth.server.DTO.RegistrationRequest;
-import auth.server.DTO.RegistrationResponse;
+import auth.server.dto.RegistrationRequest;
+import auth.server.dto.RegistrationResponse;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;

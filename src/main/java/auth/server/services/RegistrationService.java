@@ -1,6 +1,6 @@
 package auth.server.services;
 
-import auth.server.DTO.RegistrationResponse;
+import auth.server.dto.RegistrationResponse;
 import auth.server.repositories.EmployeeRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
