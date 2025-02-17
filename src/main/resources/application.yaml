@@ -1,6 +1,13 @@
 server:
   port: 9000
 
+urls:
+  paths:
+    auth_server: localhost
+    frontend: localhost
+
+
+
 logging:
   level:
     org.springframework.security: trace

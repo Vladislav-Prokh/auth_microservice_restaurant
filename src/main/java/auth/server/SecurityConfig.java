@@ -8,6 +8,8 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -48,6 +50,12 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${urls.paths.auth_server}")
+    private String authServerUrl;
+
+    @Value("${urls.paths.frontend}")
+    private String frontendUrl;
+
     private final FederatedIdentityAuthenticationSuccessHandler successHandler;
 
     public SecurityConfig(FederatedIdentityAuthenticationSuccessHandler successHandler) {
@@ -76,7 +84,6 @@ public class SecurityConfig {
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
                 );
-
         return http.build();
     }
 
@@ -90,10 +97,9 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/register").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/employees/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST,"/employees/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/employees/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/employees/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/employees/**").hasRole("ADMIN")
-
 
                         .anyRequest().authenticated()
                 )
@@ -113,14 +119,29 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedOrigin("http://localhost:8080");
+        CorsConfiguration config = getCorsConfiguration();
         config.setAllowCredentials(true);
-        source.registerCorsConfiguration("/**", config);
+        config.setMaxAge(3600L);
+        source.registerCorsConfiguration("/login", config);
+        source.registerCorsConfiguration("/oauth2/**", config);
+        source.registerCorsConfiguration("/.well-known/**", config);
+
         return source;
+    }
+
+    private  CorsConfiguration getCorsConfiguration() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://"+frontendUrl+":4200");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("PATCH");
+        config.addAllowedHeader("Content-Type");
+        config.addAllowedHeader("Authorization");
+        config.addAllowedHeader("X-Requested-With");
+        config.addAllowedHeader("Accept");
+        return config;
     }
 
     @Bean
@@ -169,7 +190,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri("http://localhost:9000/oauth2/jwks")
+        return NimbusJwtDecoder.withJwkSetUri("http://"+authServerUrl+":9000/oauth2/jwks")
                 .jwsAlgorithm(SignatureAlgorithm.RS256)
                 .build();
     }
@@ -185,7 +206,6 @@ public class SecurityConfig {
         return (context) -> {
             if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
                 context.getClaims().claims((claims) -> {
-
                     String email;
                     Object principal = context.getPrincipal().getPrincipal();
                     if (principal instanceof OidcUser oidcUser) {

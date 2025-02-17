@@ -1,0 +1,57 @@
+services:
+
+  auth_db:
+    image: postgres:latest
+    container_name: auth_db_container
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - ./backup_auth_db.sql:/docker-entrypoint-initdb.d/backup_auth_db.sql
+    ports: [ "5434:5432" ]
+    networks:
+      - db_network
+
+
+  restaurant_db:
+    image: postgres:latest
+    container_name: restaurant_db_container
+    environment:
+      POSTGRES_DB: restaurant
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - ./backup_restaurant.sql:/docker-entrypoint-initdb.d/backup_restaurant.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - db_network
+
+  auth:
+    restart: always
+    build: .
+    ports:
+      - "127.0.0.1:9000:9000"
+    depends_on:
+      - auth_db
+    environment:
+      JAVA_OPTS: "-Xmx512m"
+    networks:
+      - db_network
+
+  resource_server:
+    restart: always
+    build: ../restaurant_backend/
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - restaurant_db
+    environment:
+      JAVA_OPTS: "-Xmx512m"
+    networks:
+      - db_network
+
+networks:
+  db_network:
+    driver: bridge
