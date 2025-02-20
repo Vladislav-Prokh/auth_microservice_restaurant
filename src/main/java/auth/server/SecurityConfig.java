@@ -220,10 +220,12 @@ public class SecurityConfig {
                     String finalEmail = email;
                     Employee employee  = employeeRepository.findByEmployeeEmail(email).orElseThrow(()-> new UsernameNotFoundException("user with @mail " + finalEmail + " was not found"));
                     claims.put("roles", employee.getRole().toString());
+                    claims.put("email", employee.getEmployeeEmail());
                 });
             }
         };
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
