@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link th:href="@{registration-style.css}" rel="stylesheet" />
+    <link rel="shortcut icon" href="#">
+</head>
+
+<body>
+<div class="container">
+    <h2>Register</h2>
+    <form>
+        <div>
+            <label>Name: <input type="text" name="name" required></label>
+        </div>
+        <div>
+            <label>Surname: <input type="text" name="surname" required></label>
+        </div>
+        <div>
+            <label>Email: <input type="email" name="email" required></label>
+        </div>
+        <div>
+            <label>Password: <input type="password" name="password" required></label>
+        </div>
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+    <a href="/login">Already have an account? Login</a>
+
+    <div class="oauth">
+        <p>Or login with:</p>
+        <a href="/oauth2/authorization/google">
+            <img src="https://icon2.cleanpng.com/20190228/fbz/kisspng-google-logo-google-account-g-suite-google-images-g-icon-archives-search-png-1713904081260.webp" alt="Google Sign-In">
+        </a>
+    </div>
+</div>
+</body>
+<script th:src="@{registration-form.js}"></script>
+</html>

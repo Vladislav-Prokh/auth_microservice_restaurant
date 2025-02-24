@@ -10,5 +10,4 @@ public class RegistrationResponse {
     private String name;
     private String surname;
     private String email;
-    private Role role;
 }

@@ -6,11 +6,11 @@ urls:
     auth_server: localhost
     frontend: localhost
 
-
-
 logging:
   level:
     org.springframework.security: trace
+    org.springframework.mail: trace
+    org.apache.commons.net: trace
 
 spring:
   security:
@@ -67,3 +67,14 @@ spring:
     properties:
       hibernate:
         hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: prokhovich2@gmail.com
+    password: replace_it
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

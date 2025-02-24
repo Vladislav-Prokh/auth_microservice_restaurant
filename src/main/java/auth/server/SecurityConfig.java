@@ -8,7 +8,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -45,6 +45,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -91,21 +93,25 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf((csrf) -> csrf
-                        .ignoringRequestMatchers("/api/register")
-                        .ignoringRequestMatchers("/employees/**")
-                )
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/register").permitAll()
+                        .requestMatchers("/login/**").permitAll()
+                        .requestMatchers("/register/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/employees/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/employees/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/employees/**").hasRole("ADMIN")
-
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
-                .formLogin(Customizer.withDefaults())
+                .formLogin(
+                        formLogin -> formLogin
+                                .loginPage("/login")
+                                .permitAll()
+                )
                 .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
                         .successHandler(successHandler)
+                        .permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
@@ -116,6 +122,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -125,7 +132,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/login", config);
         source.registerCorsConfiguration("/oauth2/**", config);
         source.registerCorsConfiguration("/.well-known/**", config);
-
         return source;
     }
 
@@ -200,7 +206,6 @@ public class SecurityConfig {
         return AuthorizationServerSettings.builder().build();
     }
 
-
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer(EmployeeRepository employeeRepository) {
         return (context) -> {
@@ -240,4 +245,17 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addResourceHandlers(ResourceHandlerRegistry registry) {
+                registry
+                        .addResourceHandler("/resources/**")
+                        .addResourceLocations("classpath:/static/", "classpath:/public/", "classpath:/resources/", "classpath:/META-INF/resources/");
+            }
+        };
+    }
+
 }

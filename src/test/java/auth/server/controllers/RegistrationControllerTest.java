@@ -2,7 +2,6 @@ package auth.server.controllers;
 
 import auth.server.dto.RegistrationRequest;
 import auth.server.dto.RegistrationResponse;
-import auth.server.entities.Role;
 import auth.server.services.RegistrationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -40,16 +39,14 @@ public class RegistrationControllerTest {
         mockRequest.setSurname("Doe");
         mockRequest.setEmail("john.doe@example.com");
         mockRequest.setPassword("password123");
-        mockRequest.setRole(Role.DEFAULT);
 
-        RegistrationResponse mockResponse = new RegistrationResponse("John", "Doe", "john.doe@example.com", Role.DEFAULT);
+        RegistrationResponse mockResponse = new RegistrationResponse("John", "Doe", "john.doe@example.com");
 
         when(registrationService.register(
                 mockRequest.getName(),
                 mockRequest.getSurname(),
                 mockRequest.getEmail(),
-                mockRequest.getPassword(),
-                mockRequest.getRole()
+                mockRequest.getPassword()
         )).thenReturn(mockResponse);
 
         mockMvc.perform(post("/api/register")
@@ -59,7 +56,6 @@ public class RegistrationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("John"))
                 .andExpect(jsonPath("$.surname").value("Doe"))
-                .andExpect(jsonPath("$.email").value("john.doe@example.com"))
-                .andExpect(jsonPath("$.role").value("DEFAULT"));
+                .andExpect(jsonPath("$.email").value("john.doe@example.com"));
     }
 }

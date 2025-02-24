@@ -18,7 +18,7 @@ public class RegistrationService {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    public RegistrationResponse register(String name, String surname, String email, String rawPassword, Role role) {
+    public RegistrationResponse register(String name, String surname, String email, String rawPassword) {
         if (employeeRepository.findByEmployeeEmail(email).isPresent()) {
             throw new IllegalArgumentException("Email already exists: " + email);
         }
@@ -27,9 +27,14 @@ public class RegistrationService {
         employee.setEmployeeSurName(surname);
         employee.setEmployeeEmail(email);
         employee.setPassword(passwordEncoder.encode(rawPassword));
-        employee.setRole(role);
+        employee.setRole(Role.DEFAULT);
         employee = employeeRepository.save(employee);
         return new RegistrationResponse(employee.getEmployeeName(),
-                employee.getEmployeeSurName(), employee.getEmployeeEmail(), employee.getRole());
+                employee.getEmployeeSurName(), employee.getEmployeeEmail());
     }
+
+    public String sendVerifyCode(String email) {
+        return passwordEncoder.encode(email);
+    }
+
 }
