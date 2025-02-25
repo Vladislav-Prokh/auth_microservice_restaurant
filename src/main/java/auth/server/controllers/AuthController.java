@@ -14,4 +14,8 @@ public class AuthController {
     public String register() {
         return "registration-template";
     }
+    @GetMapping("/email-verification")
+    public String emailVerification() {
+        return "email-verification-template";
+    }
 }

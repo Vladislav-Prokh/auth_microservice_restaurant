@@ -1,23 +1,17 @@
 package auth.server.controllers;
 
 import auth.server.dto.RegistrationRequest;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import auth.server.exceptions.UserAlreadyExistsException;
+import auth.server.exceptions.VerificationCodeException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import auth.server.services.RegistrationService;
 
 @RestController
-@RequestMapping("/api/register")
+@RequestMapping("/api/registration")
 public class RegistrationController {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
 
     private final RegistrationService registrationService;
 
@@ -26,30 +20,26 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public void registerUser(@RequestBody RegistrationRequest registrationRequest) {
-        String userToSend = registrationRequest.getEmail();
-        sendVerificationEmail(userToSend);
+    public ResponseEntity<?> verifyUser(@RequestBody RegistrationRequest request, Model model) {
+        try {
+            registrationService.verifyUser(request);
+            return ResponseEntity.ok().body("{\"message\":\"code send successfully\"}");
+        } catch (UserAlreadyExistsException e) {
+            return ResponseEntity.badRequest().body("{\"message\":\"User already exists\"}");
+        } catch (VerificationCodeException e) {
+            return ResponseEntity.badRequest().body("{\"message\":\"Verification code was not sent\"}");
+        }
     }
 
-    private void sendVerificationEmail(String email) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        String emailTopic = "Verification email restaurant service";
-        String verificationCode = generateVerificationCode();
-        message.setTo(email);
-        message.setSubject(emailTopic);
-        message.setText("Your verification code, which expires in 5 minutes: "+ verificationCode);
+    @PostMapping("/code")
+    public String registerUser(@ModelAttribute("code") String code, Model model) {
         try {
-            javaMailSender.send(message);
-        } catch (Exception e) {
-            e.printStackTrace();
+            model.addAttribute("message", "User registered successfully");
+            return "redirect:/login";
         }
-    }
-    private String generateVerificationCode(){
-        int verificationCodeSize = 4;
-        int[] codeNumbers = new int[verificationCodeSize];
-        for(int i = 0; i < verificationCodeSize; i++){
-            codeNumbers[i] = (int)(Math.random()*9+1);
+        catch(VerificationCodeException e){
+            model.addAttribute("error", e.getMessage());
+            return "redirect:/registration";
         }
-        return  StringUtils.join(ArrayUtils.toObject(codeNumbers), " - ");
     }
 }

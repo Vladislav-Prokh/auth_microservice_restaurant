@@ -10,6 +10,7 @@
 <body>
 <div class="container">
   <h2>Login</h2>
+
   <form th:action="@{/login}" method="post">
     <div>
       <label>Username: <input type="text" name="username"></label>
@@ -19,10 +20,13 @@
     </div>
     <button type="submit">Login</button>
   </form>
+
   <a href="/register">Register</a>
+
   <div th:if="${param.error}" class="error-message">
     <p>Invalid username or password</p>
   </div>
+
   <div class="oauth">
     <p>Or login with:</p>
     <a href="/oauth2/authorization/google">

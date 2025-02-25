@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -246,16 +250,16 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-    @Bean
-    public WebMvcConfigurer webMvcConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                registry
-                        .addResourceHandler("/resources/**")
-                        .addResourceLocations("classpath:/static/", "classpath:/public/", "classpath:/resources/", "classpath:/META-INF/resources/");
-            }
-        };
-    }
 
+    @Bean
+    public RedisTemplate<String, Employee> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Employee> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
+        RedisSerializer<Employee> employeeSerializer = new Jackson2JsonRedisSerializer<>(Employee.class);
+        template.setKeySerializer(stringSerializer);
+        template.setValueSerializer(employeeSerializer);
+        template.afterPropertiesSet();
+        return template;
+    }
 }

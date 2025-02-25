@@ -9,8 +9,6 @@ urls:
 logging:
   level:
     org.springframework.security: trace
-    org.springframework.mail: trace
-    org.apache.commons.net: trace
 
 spring:
   security:
@@ -19,8 +17,8 @@ spring:
         client:
           oidc-client:
             registration:
-              client-id: "replace_it"
-              client-secret: "replace_it"
+              client-id: replace_it
+              client-secret: replace_it
               client-authentication-methods:
                 - "none"
               authorization-grant-types:
@@ -37,12 +35,11 @@ spring:
               access-token-time-to-live: 1440m
               refresh-token-time-to-live: 3d
               reuse-refresh-tokens: true
-
       client:
         registration:
           google:
-            client-id: "replace_it"
-            client-secret: "replace_it"
+            client-id: replace_it
+            client-secret: replace_it
             scope: openid,email,profile
             redirect-uri: "http://localhost:9000/login/oauth2/code/google"
             authorization-grant-type: authorization_code
@@ -78,3 +75,7 @@ spring:
           auth: true
           starttls:
             enable: true
+  data:
+    redis:
+      host: localhost
+      port: 6380

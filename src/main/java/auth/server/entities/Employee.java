@@ -29,4 +29,11 @@ public class Employee {
     private Role role;
 
 
+    public Employee(String email, String name, String surname, String password) {
+        this.employeeEmail = email;
+        this.employeeName = name;
+        this.employeeSurName = surname;
+        this.password = password;
+        this.role = Role.DEFAULT;
+    }
 }
