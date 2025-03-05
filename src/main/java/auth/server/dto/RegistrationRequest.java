@@ -12,4 +12,5 @@ public class RegistrationRequest {
     private String email;
     @StrongPassword
     private String password;
+    private String locale;
 }

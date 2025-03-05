@@ -4,8 +4,8 @@ server:
 
 urls:
   paths:
-    auth_server: localhost
-    frontend: localhost
+    auth_server: http://localhost:9000
+    frontend: http://localhost:4200
 
 logging:
   level:
@@ -18,8 +18,8 @@ spring:
         client:
           oidc-client:
             registration:
-              client-id: "replace_it"
-              client-secret: "replace_it"
+              client-id: replace_it
+              client-secret: replace_it
               client-authentication-methods:
                 - "none"
               authorization-grant-types:
@@ -55,7 +55,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/auth_db
     username: postgres
-    password: 123456
+    password: replace_it
     driver-class-name: org.postgresql.Driver
 
   jpa:

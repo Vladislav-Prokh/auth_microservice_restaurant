@@ -6,12 +6,8 @@ import auth.server.exceptions.VerificationCodeException;
 import jakarta.validation.Valid;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import auth.server.services.RegistrationService;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
-
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,7 +25,8 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> verifyUser(@Valid  @RequestBody RegistrationRequest request, Locale locale) {
+    public ResponseEntity<?> verifyUser(@Valid  @RequestBody RegistrationRequest request) {
+        Locale locale = new Locale(request.getLocale());
         try {
             registrationService.verifyUser(request);
             String message = messageSource.getMessage("registration.code_sent", null, locale);
@@ -44,16 +41,15 @@ public class RegistrationController {
     }
 
     @PostMapping("/code")
-    public ResponseEntity<?>  registerUser(@RequestParam("code") String code, Locale locale) {
+    public ResponseEntity<?>  registerUser(@RequestBody String code, Locale locale) {
         try {
             registrationService.register(code);
             String message = messageSource.getMessage("registration.success", null, locale);
-            return ResponseEntity.badRequest().body(Map.of("message", message));
+            return ResponseEntity.ok().body(Map.of("message", message));
         } catch (VerificationCodeException e) {
             String message = messageSource.getMessage("registration.verification_failed", null, locale);
             return ResponseEntity.badRequest().body(Map.of("error", message));
         }
 
     }
-
 }

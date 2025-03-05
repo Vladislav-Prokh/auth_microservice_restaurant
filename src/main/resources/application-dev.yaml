@@ -21,3 +21,6 @@ urls:
     auth_server: auth
     frontend: frontend
 
+server:
+  port: 8080
+  locale: uk

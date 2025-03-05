@@ -5,14 +5,13 @@ import auth.server.dto.RegistrationResponse;
 import auth.server.exceptions.UserAlreadyExistsException;
 import auth.server.exceptions.VerificationCodeException;
 import auth.server.repositories.EmployeeRepository;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import auth.server.entities.Employee;
@@ -21,22 +20,22 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class RegistrationService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
-
+    private final JavaMailSender javaMailSender;
     private final RedisTemplate<String, Employee> redisTemplate;
-
-
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public RegistrationService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder, RedisTemplate<String, Employee> redisTemplate) {
+    public RegistrationService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder, RedisTemplate<String, Employee> redisTemplate, JavaMailSender javaMailSender) {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
         this.redisTemplate = redisTemplate;
+        this.javaMailSender = javaMailSender;
     }
 
     public void register(String code) {
+        if(code.startsWith("code=")){
+            code = code.replace("code=", "");
+        }
 
         Employee employee = getVerificationCodeFromDb(code);
 
@@ -45,16 +44,14 @@ public class RegistrationService {
         }
 
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
-        try{
-            this.employeeRepository.save(employee);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+
+        this.employeeRepository.save(employee);
+
         new RegistrationResponse(employee.getEmployeeName(),
                 employee.getEmployeeSurName(), employee.getEmployeeEmail());
     }
 
+    @Async
     public void verifyUser(@Valid RegistrationRequest registrationRequest) {
         if(this.employeeRepository.findByEmployeeEmail(registrationRequest.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Email already exists: " + registrationRequest.getEmail());
@@ -67,7 +64,8 @@ public class RegistrationService {
                     registrationRequest.getEmail(),
                     registrationRequest.getName(),
                     registrationRequest.getSurname(),
-                    registrationRequest.getPassword()
+                    registrationRequest.getPassword(),
+                    registrationRequest.getLocale()
             );
             saveVerificationCodeToDb(verificationCode, employee);
         }
@@ -90,6 +88,7 @@ public class RegistrationService {
             return false;
         }
     }
+
     private void saveVerificationCodeToDb(String verificationCode, Employee employee) {
         redisTemplate.opsForValue().set(verificationCode, employee, 5, TimeUnit.MINUTES);
     }
@@ -97,6 +96,7 @@ public class RegistrationService {
     public Employee getVerificationCodeFromDb(String key) {
         return redisTemplate.opsForValue().get(key);
     }
+
     private String generateVerificationCode(){
         int verificationCodeSize = 4;
         int[] codeNumbers = new int[verificationCodeSize];
@@ -105,4 +105,5 @@ public class RegistrationService {
         }
         return  StringUtils.join(ArrayUtils.toObject(codeNumbers));
     }
+
 }

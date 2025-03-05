@@ -1,6 +1,5 @@
 package auth.server.dto;
 
-import auth.server.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

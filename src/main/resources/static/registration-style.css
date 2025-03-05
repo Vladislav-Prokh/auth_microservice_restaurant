@@ -36,7 +36,6 @@ input {
     width: 100%;
 
 }
-
 button {
     background-color: #4CAF50;
     color: white;
@@ -70,3 +69,14 @@ a:hover {
     width: 30px;
     margin-top: 0.5rem;
 }
+.error-message{
+    color: red;
+}
+.drop-list{
+    font-size: 1.3rem;
+    font-weight: bold;
+    border: #50cfc8 solid 1px;
+    background-color: #eaeaea;
+    border-radius: 5px;
+}
+

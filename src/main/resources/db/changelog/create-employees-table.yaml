@@ -38,3 +38,16 @@ databaseChangeLog:
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
+
+  - changeSet:
+      id: add-locale-column
+      author: Prokhovich Vladislav
+      changes:
+        - addColumn:
+            tableName: employees
+            columns:
+              - column:
+                  name: locale
+                  type: VARCHAR(2)
+                  constraints:
+                    nullable: false

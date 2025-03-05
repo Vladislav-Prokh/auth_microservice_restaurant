@@ -20,7 +20,7 @@ public class Employee {
 
     @Column(length = 20,name = "employee_name")
     private String employeeName;
-    @StrongPassword
+   // @StrongPassword
     @Column
     private String password;
     @Column(name = "employee_surname", nullable = false)
@@ -32,11 +32,15 @@ public class Employee {
     @Column(name = "employee_role")
     private Role role;
 
-    public Employee(String email, String name, String surname, String password) {
+    @Column(length = 2)
+    private String locale;
+
+    public Employee(String email, String name, String surname, String password, String locale) {
         this.employeeEmail = email;
         this.employeeName = name;
         this.employeeSurName = surname;
         this.password = password;
+        this.locale = locale;
         this.role = Role.DEFAULT;
     }
 }

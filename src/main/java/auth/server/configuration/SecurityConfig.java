@@ -1,4 +1,4 @@
-package auth.server;
+package auth.server.configuration;
 import auth.server.repositories.EmployeeRepository;
 import auth.server.handlers.FederatedIdentityAuthenticationSuccessHandler;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
@@ -49,8 +48,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 
 @Configuration
 @EnableWebSecurity
@@ -141,7 +139,7 @@ public class SecurityConfig {
 
     private  CorsConfiguration getCorsConfiguration() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://"+frontendUrl+":4200");
+        config.addAllowedOrigin(frontendUrl);
         config.addAllowedMethod("GET");
         config.addAllowedMethod("POST");
         config.addAllowedMethod("PUT");
@@ -200,7 +198,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri("http://"+authServerUrl+":9000/oauth2/jwks")
+        return NimbusJwtDecoder.withJwkSetUri(authServerUrl+"/oauth2/jwks")
                 .jwsAlgorithm(SignatureAlgorithm.RS256)
                 .build();
     }

@@ -5,7 +5,8 @@ document.querySelector("form").addEventListener("submit", async function (event)
         name: document.querySelector("[name='name']").value,
         surname: document.querySelector("[name='surname']").value,
         email: document.querySelector("[name='email']").value,
-        password: document.querySelector("[name='password']").value
+        password: document.querySelector("[name='password']").value,
+        locale: document.querySelector("[name='locale']").value
     };
 
     try {
