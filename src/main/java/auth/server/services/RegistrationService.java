@@ -5,6 +5,8 @@ import auth.server.dto.RegistrationResponse;
 import auth.server.exceptions.UserAlreadyExistsException;
 import auth.server.exceptions.VerificationCodeException;
 import auth.server.repositories.EmployeeRepository;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,19 +36,26 @@ public class RegistrationService {
         this.redisTemplate = redisTemplate;
     }
 
-    public RegistrationResponse register(String code) {
+    public void register(String code) {
 
         Employee employee = getVerificationCodeFromDb(code);
+
         if(employee == null) {
             throw new VerificationCodeException("Invalid verification code or it expired");
         }
+
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
-        this.employeeRepository.save(employee);
-        return new RegistrationResponse(employee.getEmployeeName(),
+        try{
+            this.employeeRepository.save(employee);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        new RegistrationResponse(employee.getEmployeeName(),
                 employee.getEmployeeSurName(), employee.getEmployeeEmail());
     }
 
-    public void verifyUser(RegistrationRequest registrationRequest) {
+    public void verifyUser(@Valid RegistrationRequest registrationRequest) {
         if(this.employeeRepository.findByEmployeeEmail(registrationRequest.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Email already exists: " + registrationRequest.getEmail());
         }

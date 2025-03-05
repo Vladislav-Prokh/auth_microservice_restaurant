@@ -1,7 +1,9 @@
 package auth.server.entities;
 
 
+import auth.server.annotations.StrongPassword;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,16 +20,17 @@ public class Employee {
 
     @Column(length = 20,name = "employee_name")
     private String employeeName;
+    @StrongPassword
     @Column
     private String password;
     @Column(name = "employee_surname", nullable = false)
     private String employeeSurName;
+    @Email
     @Column(length = 50, name = "employee_email", unique = true)
     private String employeeEmail;
     @Enumerated(EnumType.STRING)
     @Column(name = "employee_role")
     private Role role;
-
 
     public Employee(String email, String name, String surname, String password) {
         this.employeeEmail = email;

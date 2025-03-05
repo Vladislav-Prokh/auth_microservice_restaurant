@@ -1,5 +1,6 @@
 server:
   port: 9000
+  locale: uk
 
 urls:
   paths:
@@ -17,8 +18,8 @@ spring:
         client:
           oidc-client:
             registration:
-              client-id: replace_it
-              client-secret: replace_it
+              client-id: "replace_it"
+              client-secret: "replace_it"
               client-authentication-methods:
                 - "none"
               authorization-grant-types:
