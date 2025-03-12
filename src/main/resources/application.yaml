@@ -6,11 +6,9 @@ urls:
   paths:
     auth_server: http://localhost:9000
     frontend: http://localhost:4200
-
 logging:
   level:
     org.springframework.security: trace
-
 spring:
   security:
     oauth2:
@@ -18,8 +16,8 @@ spring:
         client:
           oidc-client:
             registration:
-              client-id: replace_it
-              client-secret: replace_it
+              client-id: "replace it"
+              client-secret: "replace it"
               client-authentication-methods:
                 - "none"
               authorization-grant-types:
@@ -39,8 +37,8 @@ spring:
       client:
         registration:
           google:
-            client-id: replace_it
-            client-secret: replace_it
+            client-id: "replace it"
+            client-secret: "replace it"
             scope: openid,email,profile
             redirect-uri: "http://localhost:9000/login/oauth2/code/google"
             authorization-grant-type: authorization_code
@@ -55,7 +53,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/auth_db
     username: postgres
-    password: replace_it
+    password: 123456
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -69,7 +67,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: prokhovich2@gmail.com
-    password: replace_it
+    password: replace it
     properties:
       mail:
         smtp:
@@ -80,3 +78,8 @@ spring:
     redis:
       host: localhost
       port: 6380
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest

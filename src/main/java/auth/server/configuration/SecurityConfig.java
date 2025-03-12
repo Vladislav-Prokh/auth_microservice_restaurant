@@ -100,9 +100,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/register").permitAll()
                         .requestMatchers("/login/**").permitAll()
                         .requestMatchers("/register/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/employees/{employeeId}/{email}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/employees/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/employees/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/employees/**").hasRole("ADMIN")
+
+
                         .anyRequest().permitAll()
                 )
                 .formLogin(
@@ -123,7 +126,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

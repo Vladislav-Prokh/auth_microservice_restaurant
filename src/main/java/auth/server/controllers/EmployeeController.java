@@ -40,6 +40,17 @@ public class EmployeeController {
         }
     }
 
+    @PostMapping("/{employeeId}/{email}")
+    public ResponseEntity<String> updateEmployeeEmail(@PathVariable("employeeId") Long employeeId,
+                                             @PathVariable String email) {
+        try {
+            employeeService.changeEmployeeEmail(employeeId, email);
+            return ResponseEntity.ok("Role assigned successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to assign role");
+        }
+    }
+
     @DeleteMapping("/{employee-id}")
     public ResponseEntity<Void> deleteEmployeeById(@PathVariable("employee-id") Long employee_id) {
         this.employeeService.deleteEmployeById(employee_id);
