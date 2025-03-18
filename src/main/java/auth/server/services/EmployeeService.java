@@ -1,5 +1,6 @@
 package auth.server.services;
 
+import auth.server.annotations.RequireRole;
 import auth.server.dto.UpdateEmailRequest;
 import auth.server.entities.Employee;
 import auth.server.entities.Role;
@@ -42,6 +43,7 @@ public class EmployeeService {
         }
     }
 
+    @RequireRole(value = "ADMIN")
     public Page<Employee> getEmployees(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return employeeRepository.findAll(pageable);

@@ -250,7 +250,6 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-
     @Bean
     public RedisTemplate<String, Employee> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Employee> template = new RedisTemplate<>();

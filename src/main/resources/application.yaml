@@ -16,8 +16,8 @@ spring:
         client:
           oidc-client:
             registration:
-              client-id: "replace it"
-              client-secret: "replace it"
+              client-id: replace_it
+              client-secret: replace_it
               client-authentication-methods:
                 - "none"
               authorization-grant-types:
@@ -37,8 +37,8 @@ spring:
       client:
         registration:
           google:
-            client-id: "replace it"
-            client-secret: "replace it"
+            client-id: replace_it
+            client-secret: replace_it
             scope: openid,email,profile
             redirect-uri: "http://localhost:9000/login/oauth2/code/google"
             authorization-grant-type: authorization_code
@@ -67,7 +67,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: prokhovich2@gmail.com
-    password: replace it
+    password: replace_it
     properties:
       mail:
         smtp:
